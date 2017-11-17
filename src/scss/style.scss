@@ -1,0 +1,15 @@
+#myCanvas{
+}
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#app{
+  display: inherit;
+}
+#gravityY{
+  transform: rotate(90deg);
+  position: relative;
+  left: 100px;
+}
