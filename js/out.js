@@ -22623,6 +22623,36 @@ var Gravity = function (_React$Component) {
 
         var _this = _possibleConstructorReturn(this, (Gravity.__proto__ || Object.getPrototypeOf(Gravity)).call(this, props));
 
+        _this.keyEvent = function () {
+            var gravityX = document.querySelector('#gravityX');
+            var gravityY = document.querySelector('#gravityY');
+            document.addEventListener('keydown', function (e) {
+                if (e.keyCode == 40) {
+                    var value = parseFloat(gravityY.value) + 0.5;
+                    gravityY.value = value;
+                    _this.gravOutputUpdate('y', value);
+                }
+
+                if (e.keyCode == 38) {
+                    var _value = parseFloat(gravityY.value) - 0.5;
+                    gravityY.value = _value;
+                    _this.gravOutputUpdate('y', _value);
+                }
+
+                if (e.keyCode == 37) {
+                    var _value2 = parseFloat(gravityX.value) - 0.5;
+                    gravityX.value = _value2;
+                    _this.gravOutputUpdate('x', _value2);
+                }
+                if (e.keyCode == 39) {
+                    var _value3 = parseFloat(gravityX.value) + 0.5;
+                    gravityX.value = _value3;
+                    _this.gravOutputUpdate('x', _value3);
+                }
+                // 37l 39r
+            });
+        };
+
         _this.gravOutputUpdate = function (axis, val) {
             _this.state.engine.world.gravity[axis] = val;
             if (axis === 'y') {
@@ -22649,16 +22679,18 @@ var Gravity = function (_React$Component) {
             win: null,
             time: 0,
             bestTime: _this.loadData(),
-            currentBestTime: null
+            prevTime: null
         };
 
         return _this;
     }
 
-    //Saving/loading fastest finish time
-
     _createClass(Gravity, [{
         key: 'saveData',
+
+
+        //Saving/loading fastest finish time
+
         value: function saveData() {
             localStorage.setItem('score', JSON.stringify({ bestTime: this.state.bestTime }));
         }
@@ -22681,6 +22713,7 @@ var Gravity = function (_React$Component) {
         value: function componentDidMount() {
             var _this2 = this;
 
+            this.keyEvent();
             // Timer
 
             this.interval = setInterval(function () {
@@ -22720,7 +22753,7 @@ var Gravity = function (_React$Component) {
 
             //Map
 
-            var endPoint = this.state.Bodies.rectangle(1360, 500, 20, 100, { isStatic: true, render: { fillStyle: 'white' } }),
+            var endPoint = this.state.Bodies.rectangle(1360, 500, 20, 100, { isStatic: true, render: { fillStyle: 'red' } }),
                 wall1 = this.state.Bodies.rectangle(100, 150, 300, 40, { isStatic: true, render: { fillStyle: 'black' } }),
                 wall2 = this.state.Bodies.rectangle(400, 150, 40, 450, { isStatic: true, render: { fillStyle: 'black' } }),
                 wall3 = this.state.Bodies.rectangle(250, 355, 280, 40, { isStatic: true, render: { fillStyle: 'black' } }),
@@ -22765,7 +22798,7 @@ var Gravity = function (_React$Component) {
 
             var circleA = this.state.Bodies.circle(100, 10, 30, {
                 render: {
-                    fillStyle: 'white'
+                    fillStyle: 'red'
                 }
             });
 
@@ -22795,6 +22828,8 @@ var Gravity = function (_React$Component) {
                     var pair = pairs[i];
                     if (pair.bodyA === endPoint && pair.bodyB === circleA) {
                         _this2.state.Body.setPosition(circleA, { x: 100, y: 15 });
+                        _this2.gravOutputUpdate('x', 0);
+                        _this2.gravOutputUpdate('y', 0);
                         console.log('you win');
                         if (_this2.state.time < _this2.state.bestTime || _this2.state.bestTime == null) {
                             _this2.setState({
@@ -22803,12 +22838,8 @@ var Gravity = function (_React$Component) {
                                 return _this2.saveData();
                             });
                         }
-                        if (_this2.state.time < _this2.state.currentBestTime || _this2.state.currentBestTime == null) {
-                            _this2.setState({
-                                currentBestTime: _this2.state.time
-                            });
-                        }
                         _this2.setState({
+                            prevTime: _this2.state.time,
                             time: 0
                         });
                     }
@@ -22830,26 +22861,27 @@ var Gravity = function (_React$Component) {
             return _react2.default.createElement(
                 'div',
                 null,
+                _react2.default.createElement(
+                    'h2',
+                    { id: 'time' },
+                    'Time: ',
+                    this.state.time,
+                    's'
+                ),
                 _react2.default.createElement(_controls2.default, { handleGravity: this.gravOutputUpdate, valueY: this.state.gravityY, valueX: this.state.gravityX }),
                 _react2.default.createElement(
                     'div',
-                    null,
-                    'Time: ',
-                    this.state.time
+                    { id: 'highscore' },
+                    'Best Time: ',
+                    this.state.bestTime,
+                    's'
                 ),
                 ' ',
                 _react2.default.createElement(
                     'div',
-                    null,
-                    'Highscore: ',
-                    this.state.bestTime
-                ),
-                ' ',
-                _react2.default.createElement(
-                    'div',
-                    null,
-                    ' Your best: ',
-                    this.state.currentBestTime
+                    { id: 'score' },
+                    ' Your previous time: ',
+                    this.state.prevTime
                 )
             );
         }
@@ -22918,8 +22950,28 @@ var Controls = function (_React$Component) {
             return _react2.default.createElement(
                 'form',
                 null,
-                _react2.default.createElement('input', { onInput: this.handleChangeX, type: 'range', id: 'gravityX', value: this.props.valueX, min: '-1', max: '1', step: '.1' }),
-                _react2.default.createElement('input', { onInput: this.handleChangeY, type: 'range', id: 'gravityY', value: this.props.valueY, min: '-1', max: '1', step: '.1' })
+                _react2.default.createElement(
+                    'div',
+                    null,
+                    _react2.default.createElement('input', { onInput: this.handleChangeX, type: 'range', id: 'gravityX', value: this.props.valueX, min: '-1', max: '1', step: '.1' }),
+                    _react2.default.createElement(
+                        'div',
+                        { id: 'Xvalue' },
+                        'Horizontal: ',
+                        this.props.valueX
+                    )
+                ),
+                _react2.default.createElement(
+                    'div',
+                    null,
+                    _react2.default.createElement('input', { onInput: this.handleChangeY, type: 'range', id: 'gravityY', value: this.props.valueY, min: '-1', max: '1', step: '.1' }),
+                    _react2.default.createElement(
+                        'div',
+                        { id: 'Yvalue' },
+                        'Vertical: ',
+                        this.props.valueY
+                    )
+                )
             );
         }
     }]);

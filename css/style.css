@@ -1,12 +1,41 @@
+canvas {
+  margin-top: 100px;
+  margin-left: 50px; }
+
+html {
+  background-color: #fed456; }
+
 body {
   display: flex;
   justify-content: center;
   align-items: center; }
 
+body section {
+  display: block;
+  position: relative; }
+
+body div {
+  display: block; }
+
 #app {
-  display: inherit; }
+  display: block; }
 
 #gravityY {
-  transform: rotate(90deg);
-  position: relative;
-  left: 100px; }
+  position: relative; }
+
+#Yvalue, #Xvalue, #highscore, #score, #time, h1 {
+  text-shadow: 1px 1px 2px white;
+  font-size: 28px;
+  width: 230px;
+  padding-bottom: 10px; }
+
+#Yvalue, #Xvalue {
+  padding-bottom: 25px; }
+
+h1 {
+  margin: 15px;
+  position: absolute;
+  left: 45vw;
+  top: 5px;
+  font-size: 50px;
+  width: 500px; }
