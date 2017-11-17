@@ -3,14 +3,12 @@ import React from 'react'
 class Controls extends React.Component{
     handleChangeX = (e) => {
         if(typeof this.props.handleGravity === 'function'){
-            console.log('hello', e.target.value);
             this.props.handleGravity('x', e.target.value);
         }
     };
 
     handleChangeY = (e) => {
         if(typeof this.props.handleGravity === 'function'){
-            console.log('hello', e.target.value);
             this.props.handleGravity('y', e.target.value);
         }
     };
@@ -22,6 +20,7 @@ class Controls extends React.Component{
             </form>
         )
     };
+
 }
 
 module.exports = Controls;
