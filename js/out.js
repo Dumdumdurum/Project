@@ -22649,7 +22649,6 @@ var Gravity = function (_React$Component) {
                     gravityX.value = _value3;
                     _this.gravOutputUpdate('x', _value3);
                 }
-                // 37l 39r
             });
         };
 
